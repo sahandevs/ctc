@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "ctc",
+    "ctc-utils",
+    "example",
+]
