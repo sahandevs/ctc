@@ -20,12 +20,13 @@ ctc = "0.1"
 ```rust
 use ctc;
 fn main() {
-    // change the `Cargo.toml` and `cargo` base on your needs
+    // change the `Cargo.toml` and `cargo` to your desired
+    // file path and name.
     ctc::load("Cargo.toml", "cargo").unwrap();
 }
 ```
 
-- 4: use it like this:
+- 4: finally, use it like this:
 
 ```rust
 mod cargo {
@@ -38,3 +39,5 @@ fn main() {
     println!("package.edition: {}", cargo::package::edition);
 }
 ```
+
+See the [example](./example) project.
