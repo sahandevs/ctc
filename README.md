@@ -1,6 +1,8 @@
 # CTC - Compile-Time-Config
 
-load config files on compilation.
+![Crates.io](https://img.shields.io/crates/v/ctc)
+
+load config files on compile time.
 
 ## Usage
 

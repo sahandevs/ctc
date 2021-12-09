@@ -2,7 +2,8 @@
 name = "ctc-utils"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+homepage = "https://github.com/sahandevs/ctc"
+description = "load config files on compile time."
+license = "MIT"
 
 [dependencies]

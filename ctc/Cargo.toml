@@ -2,6 +2,9 @@
 name = "ctc"
 version = "0.1.0"
 edition = "2021"
+homepage = "https://github.com/sahandevs/ctc"
+description = "load config files on compile time."
+license = "MIT"
 
 [dependencies]
 anyhow = "1.0"
