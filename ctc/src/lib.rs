@@ -117,6 +117,11 @@ fn load(conf_file_name: &str, out: &str) -> Result<TokenStream, anyhow::Error> {
     Ok(r)
 }
 
+/// Usage:
+/// ```rust
+/// ctc::import_conf!("Cargo.toml", cargo);
+/// println!("package.name: {}", cargo::package::name);
+/// ```
 #[proc_macro]
 pub fn import_conf(input: TokenStream) -> TokenStream {
     let input = input.to_string();
