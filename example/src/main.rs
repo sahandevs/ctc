@@ -1,6 +1,4 @@
-mod cargo {
-    ctc_utils::import_conf!("cargo");
-}
+ctc::import_conf!("example/Cargo.toml", cargo);
 
 fn main() {
     println!("package.name: {}", cargo::package::name);

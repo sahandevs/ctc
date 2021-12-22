@@ -10,30 +10,13 @@ load config files on compile time.
 
 ```toml
 [dependencies]
-ctc-utils = "0.1"
-
-[build-dependencies]
-ctc = "0.1"
+ctc = "0.2"
 ```
 
-- 2: create a file named [`build.rs`](https://doc.rust-lang.org/cargo/reference/build-scripts.html).
-- 3: add the following code:
+- 2: import config files like this:
 
 ```rust
-use ctc;
-fn main() {
-    // change the `Cargo.toml` and `cargo` to your desired
-    // file path and name.
-    ctc::load("Cargo.toml", "cargo").unwrap();
-}
-```
-
-- 4: finally, use it like this:
-
-```rust
-mod cargo {
-    ctc_utils::import_conf!("cargo");
-}
+ctc::import_conf!("Cargo.toml", cargo);
 
 fn main() {
     println!("package.name: {}", cargo::package::name);
@@ -42,4 +25,4 @@ fn main() {
 }
 ```
 
-See the [example](./example) project.
+See the [example project](./example).

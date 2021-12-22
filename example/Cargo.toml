@@ -6,7 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ctc-utils = { path = "../ctc-utils"}
+ctc = { path = "../ctc"}
 
-[build-dependencies]
-ctc = { path = "../ctc" }

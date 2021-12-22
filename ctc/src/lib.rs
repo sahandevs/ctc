@@ -1,4 +1,5 @@
-use std::{env, fs, path::Path};
+use anyhow::bail;
+use proc_macro::TokenStream;
 use toml::Value;
 macro_rules! invalid {
     () => {
@@ -23,6 +24,8 @@ macro_rules! try_type {
         }
     }};
 }
+
+const ATTRS: &str = "#![allow(non_upper_case_globals)] #![allow(dead_code)]";
 
 fn value_to_rs(name: String, value: Value) -> Result<String, anyhow::Error> {
     let name: String = name
@@ -93,21 +96,38 @@ fn value_to_rs(name: String, value: Value) -> Result<String, anyhow::Error> {
             for (key, val) in x {
                 items.push(value_to_rs(key, val)?);
             }
-            format!("pub mod {} {{ {} }}", name, items.join("\n"))
+            format!("pub mod {} {{ {} {} }}", name, ATTRS, items.join("\n"))
         }
     })
 }
 
-pub fn load(conf_file_name: &str, out: &str) -> Result<(), anyhow::Error> {
+fn load(conf_file_name: &str, out: &str) -> Result<TokenStream, anyhow::Error> {
+    let current_dir = std::env::current_dir()?;
+    let conf_file_name = current_dir.join(conf_file_name);
     let conf = {
-        let raw = std::fs::read_to_string(conf_file_name)?;
-        raw.parse::<Value>().unwrap()
+        let raw = std::fs::read_to_string(&conf_file_name);
+        match raw {
+            Ok(raw) => raw.parse::<Value>().unwrap(),
+            Err(e) => bail!("failed to open file {:?}. err: {}", conf_file_name, e),
+        }
     };
 
-    let out_dir = env::var_os("OUT_DIR").unwrap();
-    let conf_src = value_to_rs("conf".into(), conf)?;
-    let dest_path = Path::new(&out_dir).join(format!("{}.rs", out));
-    fs::write(&dest_path, conf_src).unwrap();
-    println!("cargo:rerun-if-changed={}", conf_file_name);
-    Ok(())
+    let conf_src = value_to_rs(out.into(), conf)?;
+    let r: TokenStream = conf_src.parse().unwrap();
+    Ok(r)
+}
+
+#[proc_macro]
+pub fn import_conf(input: TokenStream) -> TokenStream {
+    let input = input.to_string();
+    let mut input = input.split(",");
+    let file_name = input.next().expect("expected file_name at first par");
+    let file_name = file_name.trim().trim_matches(|x| x == '"');
+
+    let mod_name = input.next().expect("expected module name at second par");
+
+    match load(file_name, mod_name) {
+        Ok(x) => x,
+        Err(e) => panic!("{}", e),
+    }
 }
